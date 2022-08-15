@@ -1,4 +1,13 @@
-import { showToast, Color, Form, Toast, OAuth, getPreferenceValues, Image, Icon } from "@raycast/api";
+import {
+  showToast,
+  Color,
+  Form,
+  Toast,
+  OAuth,
+  getPreferenceValues,
+  Image,
+  Icon,
+} from "@raycast/api";
 import { Client, isNotionClientError } from "@notionhq/client";
 import fetch from "node-fetch";
 import moment from "moment";
@@ -80,18 +89,24 @@ export async function authorize(): Promise<void> {
   await alreadyAuthorizing;
 }
 
-export async function fetchTokens(authRequest: OAuth.AuthorizationRequest, code: string): Promise<OAuth.TokenResponse> {
-  const response = await fetch("https://raycast-notion-pkce-proxy.herokuapp.com/token", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      client_id: clientId,
-      code,
-      code_verifier: authRequest.codeVerifier,
-      grant_type: "authorization_code",
-      redirect_uri: authRequest.redirectURI,
-    }),
-  });
+export async function fetchTokens(
+  authRequest: OAuth.AuthorizationRequest,
+  code: string
+): Promise<OAuth.TokenResponse> {
+  const response = await fetch(
+    "https://raycast-notion-pkce-proxy.herokuapp.com/token",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        client_id: clientId,
+        code,
+        code_verifier: authRequest.codeVerifier,
+        grant_type: "authorization_code",
+        redirect_uri: authRequest.redirectURI,
+      }),
+    }
+  );
   if (!response.ok) {
     console.error("fetch tokens error:", await response.text());
     throw new Error(response.statusText);
@@ -115,7 +130,9 @@ export async function fetchDatabases(): Promise<Database[]> {
       filter: { property: "object", value: "database" },
     });
     return databases.results
-      .map((x) => (x.object === "database" && "last_edited_time" in x ? x : undefined))
+      .map((x) =>
+        x.object === "database" && "last_edited_time" in x ? x : undefined
+      )
       .filter(isNotNullOrUndefined)
       .map(
         (x) =>
@@ -125,10 +142,11 @@ export async function fetchDatabases(): Promise<Database[]> {
             title: x.title[0]?.plain_text,
             icon_emoji: x.icon?.type === "emoji" ? x.icon.emoji : null,
             icon_file: x.icon?.type === "file" ? x.icon.file.url : null,
-            icon_external: x.icon?.type === "external" ? x.icon.external.url : null,
+            icon_external:
+              x.icon?.type === "external" ? x.icon.external.url : null,
           } as Database)
       );
-  } catch (err: unknown) {
+  } catch (err) {
     console.error(err);
     if (isNotionClientError(err)) {
       showToast({
@@ -146,10 +164,14 @@ export async function fetchDatabases(): Promise<Database[]> {
 }
 
 // Fetch database properties
-export async function fetchDatabaseProperties(databaseId: string): Promise<DatabaseProperty[]> {
+export async function fetchDatabaseProperties(
+  databaseId: string
+): Promise<DatabaseProperty[]> {
   try {
     await authorize();
-    const database = await notion.databases.retrieve({ database_id: databaseId });
+    const database = await notion.databases.retrieve({
+      database_id: databaseId,
+    });
     const propertyNames = Object.keys(database.properties).reverse();
 
     const databaseProperties: DatabaseProperty[] = [];
@@ -190,7 +212,7 @@ export async function fetchDatabaseProperties(databaseId: string): Promise<Datab
     });
 
     return databaseProperties;
-  } catch (err: unknown) {
+  } catch (err) {
     console.error(err);
     if (isNotionClientError(err)) {
       showToast({
@@ -241,7 +263,7 @@ export async function queryDatabase(
     });
 
     return database.results.map(pageMapper);
-  } catch (err: unknown) {
+  } catch (err) {
     console.error(err);
     if (isNotionClientError(err)) {
       showToast({
@@ -259,11 +281,20 @@ export async function queryDatabase(
 }
 
 type CreateRequest = Parameters<typeof notion.pages.create>[0];
-type DatabaseCreateProperties<T> = T extends { parent: { type?: "database_id" }; properties: infer U } ? U : never;
-type DatabaseCreateProperty = UnwrapRecord<DatabaseCreateProperties<CreateRequest>>;
+type DatabaseCreateProperties<T> = T extends {
+  parent: { type?: "database_id" };
+  properties: infer U;
+}
+  ? U
+  : never;
+type DatabaseCreateProperty = UnwrapRecord<
+  DatabaseCreateProperties<CreateRequest>
+>;
 
 // Create database page
-export async function createDatabasePage(values: Form.Values): Promise<Page | undefined> {
+export async function createDatabasePage(
+  values: Form.Values
+): Promise<Page | undefined> {
   try {
     await authorize();
     const { database, content, ...props } = values;
@@ -282,7 +313,9 @@ export async function createDatabasePage(values: Form.Values): Promise<Page | un
       if (!type) {
         return;
       }
-      const propId = formId.match(new RegExp("(?<=property::" + type + "::).*", "g"))?.[0];
+      const propId = formId.match(
+        new RegExp("(?<=property::" + type + "::).*", "g")
+      )?.[0];
       if (!propId) {
         return;
       }
@@ -333,12 +366,18 @@ export async function createDatabasePage(values: Form.Values): Promise<Page | un
             };
             break;
           case "date": {
-            type DateProperty = Exclude<Extract<DatabaseCreateProperty, { type?: "date" }>["date"], null>;
+            type DateProperty = Exclude<
+              Extract<DatabaseCreateProperty, { type?: "date" }>["date"],
+              null
+            >;
             type DatePropertyTimeZone = Required<DateProperty["time_zone"]>;
             arg.properties[propId] = {
               date: {
-                start: moment(value).subtract(new Date().getTimezoneOffset(), "minutes").toISOString(),
-                time_zone: Intl.DateTimeFormat().resolvedOptions().timeZone as DatePropertyTimeZone,
+                start: moment(value)
+                  .subtract(new Date().getTimezoneOffset(), "minutes")
+                  .toISOString(),
+                time_zone: Intl.DateTimeFormat().resolvedOptions()
+                  .timeZone as DatePropertyTimeZone,
               },
             };
             break;
@@ -357,12 +396,16 @@ export async function createDatabasePage(values: Form.Values): Promise<Page | un
             break;
           case "multi_select":
             arg.properties[propId] = {
-              multi_select: value.map((multi_select_id: string) => ({ id: multi_select_id })),
+              multi_select: value.map((multi_select_id: string) => ({
+                id: multi_select_id,
+              })),
             };
             break;
           case "relation":
             arg.properties[propId] = {
-              relation: value.map((relation_page_id: string) => ({ id: relation_page_id })),
+              relation: value.map((relation_page_id: string) => ({
+                id: relation_page_id,
+              })),
             };
             break;
           case "people":
@@ -377,7 +420,7 @@ export async function createDatabasePage(values: Form.Values): Promise<Page | un
     const page = await notion.pages.create(arg);
 
     return pageMapper(page);
-  } catch (err: unknown) {
+  } catch (err) {
     console.error(err);
     if (isNotionClientError(err)) {
       showToast({
@@ -407,7 +450,7 @@ export async function patchPage(
     });
 
     return pageMapper(page);
-  } catch (err: unknown) {
+  } catch (err) {
     console.error(err);
     if (isNotionClientError(err)) {
       showToast({
@@ -438,7 +481,7 @@ export async function search(query: string | undefined): Promise<Page[]> {
     });
 
     return database.results.map(pageMapper);
-  } catch (err: unknown) {
+  } catch (err) {
     console.error(err);
     if (isNotionClientError(err)) {
       showToast({
@@ -456,7 +499,9 @@ export async function search(query: string | undefined): Promise<Page[]> {
 }
 
 // Fetch page content
-export async function fetchPageContent(pageId: string): Promise<PageContent | undefined> {
+export async function fetchPageContent(
+  pageId: string
+): Promise<PageContent | undefined> {
   try {
     await authorize();
     const { results } = await notion.blocks.children.list({
@@ -466,9 +511,12 @@ export async function fetchPageContent(pageId: string): Promise<PageContent | un
     const n2m = new NotionToMarkdown({ notionClient: notion });
 
     return {
-      markdown: results.length === 0 ? "*Page is empty*" : n2m.toMarkdownString(await n2m.blocksToMarkdown(results)),
+      markdown:
+        results.length === 0
+          ? "*Page is empty*"
+          : n2m.toMarkdownString(await n2m.blocksToMarkdown(results)),
     };
-  } catch (err: unknown) {
+  } catch (err) {
     console.error(err);
     if (isNotionClientError(err)) {
       showToast({
@@ -502,7 +550,7 @@ export async function fetchUsers(): Promise<User[]> {
             avatar_url: x.avatar_url,
           } as User)
       );
-  } catch (err: unknown) {
+  } catch (err) {
     console.error(err);
     if (isNotionClientError(err)) {
       showToast({
@@ -519,7 +567,10 @@ export async function fetchUsers(): Promise<User[]> {
   }
 }
 
-export async function appendToPage(pageId: string, params: { content: string }): Promise<{ markdown: string }> {
+export async function appendToPage(
+  pageId: string,
+  params: { content: string }
+): Promise<{ markdown: string }> {
   try {
     await authorize();
 
@@ -533,9 +584,12 @@ export async function appendToPage(pageId: string, params: { content: string }):
     const n2m = new NotionToMarkdown({ notionClient: notion });
 
     return {
-      markdown: results.length === 0 ? "" : "\n\n" + n2m.toMarkdownString(await n2m.blocksToMarkdown(results)),
+      markdown:
+        results.length === 0
+          ? ""
+          : "\n\n" + n2m.toMarkdownString(await n2m.blocksToMarkdown(results)),
     };
-  } catch (err: unknown) {
+  } catch (err) {
     console.error(err);
     if (isNotionClientError(err)) {
       showToast({
@@ -558,13 +612,30 @@ function pageMapper(jsonPage: NotionObject): Page {
     id: jsonPage.id,
     title: "Untitled",
     properties: {},
-    parent_page_id: "parent" in jsonPage && "page_id" in jsonPage.parent ? jsonPage.parent.page_id : undefined,
+    parent_page_id:
+      "parent" in jsonPage && "page_id" in jsonPage.parent
+        ? jsonPage.parent.page_id
+        : undefined,
     parent_database_id:
-      "parent" in jsonPage && "database_id" in jsonPage.parent ? jsonPage.parent.database_id : undefined,
-    last_edited_time: "last_edited_time" in jsonPage ? new Date(jsonPage.last_edited_time).getTime() : undefined,
-    icon_emoji: "icon" in jsonPage && jsonPage.icon?.type === "emoji" ? jsonPage.icon.emoji : null,
-    icon_file: "icon" in jsonPage && jsonPage.icon?.type === "file" ? jsonPage.icon.file.url : null,
-    icon_external: "icon" in jsonPage && jsonPage.icon?.type === "external" ? jsonPage.icon.external.url : null,
+      "parent" in jsonPage && "database_id" in jsonPage.parent
+        ? jsonPage.parent.database_id
+        : undefined,
+    last_edited_time:
+      "last_edited_time" in jsonPage
+        ? new Date(jsonPage.last_edited_time).getTime()
+        : undefined,
+    icon_emoji:
+      "icon" in jsonPage && jsonPage.icon?.type === "emoji"
+        ? jsonPage.icon.emoji
+        : null,
+    icon_file:
+      "icon" in jsonPage && jsonPage.icon?.type === "file"
+        ? jsonPage.icon.file.url
+        : null,
+    icon_external:
+      "icon" in jsonPage && jsonPage.icon?.type === "external"
+        ? jsonPage.icon.external.url
+        : null,
     url: "url" in jsonPage ? jsonPage.url : undefined,
   };
 
@@ -656,7 +727,9 @@ export function extractPropertyValue(
     case "select":
       return property.select?.name || null;
     case "multi_select":
-      return property.multi_select.map((selection) => selection.name).join(", ");
+      return property.multi_select
+        .map((selection) => selection.name)
+        .join(", ");
     case "string":
       return property.string;
     case "boolean":

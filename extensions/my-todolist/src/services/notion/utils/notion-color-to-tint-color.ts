@@ -14,7 +14,6 @@ export function notionColorToTintColor(notionColor: string | undefined): Color {
     pink: Color.Magenta,
   } as Record<string, Color>;
 
-  console.log(notionColor);
   if (notionColor === undefined) {
     return colorMapper["default"];
   }

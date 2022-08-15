@@ -1,11 +1,11 @@
-import { AuthorizationAction } from '@/components/authorization-action'
-import { CompleteTodoAction } from '@/components/complete-todo-action'
-import { CopyToDoAction } from '@/components/copy-todo-action'
-import { DeleteTodoAction } from '@/components/delete-todo-action'
-import { RemindAction } from '@/components/remind-todo-action'
-import { SetLabelAction } from '@/components/set-todo-label-action'
-import { useOnboarding } from '@/hooks/use-onboarding'
-import { Action, ActionPanel, Color, Icon, List } from '@raycast/api'
+import { AuthorizationAction } from "@/components/authorization-action";
+import { CompleteTodoAction } from "@/components/complete-todo-action";
+import { CopyToDoAction } from "@/components/copy-todo-action";
+import { DeleteTodoAction } from "@/components/delete-todo-action";
+import { RemindAction } from "@/components/remind-todo-action";
+import { SetLabelAction } from "@/components/set-todo-label-action";
+import { useOnboarding } from "@/hooks/use-onboarding";
+import { Action, ActionPanel, Color, Icon, List } from "@raycast/api";
 
 export function Onboarding() {
   const {
@@ -20,7 +20,7 @@ export function Onboarding() {
     handleDelete,
     handleMoveUp,
     handleMoveDown,
-  } = useOnboarding()
+  } = useOnboarding();
 
   return (
     <List
@@ -54,7 +54,7 @@ export function Onboarding() {
                   {
                     text: todo.tag.name,
                     icon: {
-                      source: 'dot.png',
+                      source: "dot.png",
                       tintColor: todo.tag.color,
                     },
                   },
@@ -72,15 +72,15 @@ export function Onboarding() {
               />
               <Action
                 icon={Icon.ChevronUp}
-                title={'Move Up'}
+                title={"Move Up"}
                 onAction={() => handleMoveUp(index)}
-                shortcut={{ modifiers: ['shift'], key: 'arrowUp' }}
+                shortcut={{ modifiers: ["shift"], key: "arrowUp" }}
               />
               <Action
                 icon={Icon.ChevronDown}
-                title={'Move Down'}
+                title={"Move Down"}
                 onAction={() => handleMoveDown(index)}
-                shortcut={{ modifiers: ['shift'], key: 'arrowDown' }}
+                shortcut={{ modifiers: ["shift"], key: "arrowDown" }}
               />
               <DeleteTodoAction todo={todo} onDelete={handleDelete} />
               <ActionPanel.Section>
@@ -89,7 +89,7 @@ export function Onboarding() {
                     title="View Link"
                     icon={Icon.Link}
                     url={todo.contentUrl}
-                    shortcut={{ modifiers: ['cmd'], key: 'e' }}
+                    shortcut={{ modifiers: ["cmd"], key: "e" }}
                   />
                 ) : null}
                 <CopyToDoAction todo={todo} />
@@ -100,5 +100,5 @@ export function Onboarding() {
         />
       ))}
     </List>
-  )
+  );
 }

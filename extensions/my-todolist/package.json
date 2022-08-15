@@ -1,0 +1,91 @@
+{
+  "$schema": "https://www.raycast.com/schemas/extension.json",
+  "name": "todos",
+  "title": "My Todos",
+  "description": "",
+  "icon": "command-icon.png",
+  "author": "qeude",
+  "categories": [
+    "Productivity"
+  ],
+  "license": "MIT",
+  "commands": [
+    {
+      "name": "index",
+      "title": "My Todos",
+      "description": "Template for showing a static list and a detail view",
+      "mode": "view"
+    }
+  ],
+  "preferences": [
+    {
+      "name": "notion_token",
+      "type": "password",
+      "title": "Notion internal integration token",
+      "link": "https://www.notion.so/my-integrations",
+      "description": "Your Notion internal integration token",
+      "placeholder": "secret_ldeokdoqkdokqwooKDOWKok4OKDWOK",
+      "required": true
+    },
+    {
+      "name": "database_name",
+      "type": "textfield",
+      "title": "Notion Database Name",
+      "label": "Notion Database Name",
+      "description": "Notion Database name to use as a todolist.",
+      "placeholder": "To-Do",
+      "default": "To-Do",
+      "required": false
+    },
+    {
+      "name": "property_title",
+      "type": "textfield",
+      "title": "Title Property Name",
+      "label": "Title Property Name",
+      "description": "The database name of the Title Property",
+      "placeholder": "Name",
+      "default": "Name",
+      "required": false
+    },
+    {
+      "name": "property_date",
+      "type": "textfield",
+      "title": "Date Property Name",
+      "label": "Date Property Name",
+      "description": "The database name of the Date Property",
+      "placeholder": "Last edited time",
+      "default": "Last edited time",
+      "required": false
+    },
+    {
+      "name": "property_status",
+      "type": "textfield",
+      "title": "Status Property Name",
+      "label": "Status Property Name",
+      "description": "The database name of the Status Property",
+      "placeholder": "Status",
+      "default": "Status",
+      "required": false
+    }
+  ],
+  "dependencies": {
+    "@raycast/api": "^1.38.3"
+  },
+  "devDependencies": {
+    "@notionhq/client": "^1.0.4",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "node-fetch": "^3.2.10",
+    "prettier": "^2.5.1",
+    "typescript": "^4.4.3"
+  },
+  "scripts": {
+    "build": "ray build -e dist",
+    "dev": "ray develop",
+    "fix-lint": "ray lint --fix",
+    "lint": "ray lint",
+    "publish": "ray publish"
+  }
+}
