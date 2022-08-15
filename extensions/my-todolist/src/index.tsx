@@ -20,12 +20,8 @@ export default function App() {
     getInitialData,
   } = useTodos();
 
-  const doneTodos = todos.filter(
-    (todo) => todo.status.name === StatusValue.Done
-  );
-  const todoTodos = todos.filter(
-    (todo) => todo.status.name !== StatusValue.Done
-  );
+  const doneTodos = todos.filter((todo) => todo.status.name === StatusValue.Done);
+  const todoTodos = todos.filter((todo) => todo.status.name !== StatusValue.Done);
   return (
     <List
       isLoading={loading}
@@ -33,19 +29,10 @@ export default function App() {
       onSearchTextChange={setSearchText}
       searchBarPlaceholder="Filter or create to-do"
       searchBarAccessory={
-        <List.Dropdown
-          tooltip="Filter by status"
-          value={filter}
-          onChange={setFilter}
-        >
+        <List.Dropdown tooltip="Filter by status" value={filter} onChange={setFilter}>
           <List.Dropdown.Item title="All" value={"all"} />
           {status.map((item) => (
-            <List.Dropdown.Item
-              key={item.id}
-              icon={getIconForStatus(item)}
-              title={item.name}
-              value={item.id}
-            />
+            <List.Dropdown.Item key={item.id} icon={getIconForStatus(item)} title={item.name} value={item.id} />
           ))}
         </List.Dropdown>
       }
@@ -56,11 +43,7 @@ export default function App() {
           title={`Create "${searchText}"`}
           actions={
             <ActionPanel>
-              <Action
-                icon={Icon.Plus}
-                title="Create To-do"
-                onAction={handleCreate}
-              />
+              <Action icon={Icon.Plus} title="Create To-do" onAction={handleCreate} />
               <Action.OpenInBrowser
                 title="Open Database"
                 icon={Icon.Binoculars}
@@ -73,31 +56,19 @@ export default function App() {
       ) : null}
       <List.Section title={"To-Do"}>
         {todoTodos.length > 0
-          ? todoTodos.map((todo) => (
-              <TodoItem
-                todo={todo}
-                status={status}
-                handleSetStatus={handleSetStatus}
-              />
-            ))
+          ? todoTodos.map((todo) => <TodoItem todo={todo} status={status} handleSetStatus={handleSetStatus} />)
           : null}
       </List.Section>
       <List.Section title={StatusValue.Done}>
         {doneTodos.length > 0
           ? doneTodos
               .sort((a, b) => {
-                return (
-                  new Date(b.lastEditedDateString).getTime() -
-                  new Date(a.lastEditedDateString).getTime()
-                );
+                if (b.lastEditedDateString !== null && a.lastEditedDateString !== null) {
+                  return new Date(b.lastEditedDateString).getTime() - new Date(a.lastEditedDateString).getTime();
+                }
+                return -1;
               })
-              .map((todo) => (
-                <TodoItem
-                  todo={todo}
-                  status={status}
-                  handleSetStatus={handleSetStatus}
-                />
-              ))
+              .map((todo) => <TodoItem todo={todo} status={status} handleSetStatus={handleSetStatus} />)
           : null}
       </List.Section>
     </List>

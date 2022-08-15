@@ -26,7 +26,7 @@ export async function createTodo(props: any): Promise<Todo> {
           ],
         },
         [preferences.property_status]: {
-          select: props.tagId ? { id: props.tag } : null,
+          select: props.statusId ? { id: props.statusId } : null,
         },
         [preferences.property_date]: {
           date: props.date
@@ -48,6 +48,6 @@ export async function createTodo(props: any): Promise<Todo> {
     } else {
       showToast(Toast.Style.Failure, "Error occurred");
     }
-    throw new Error(err.message);
+    throw new Error((err as Error).message);
   }
 }

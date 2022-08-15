@@ -24,8 +24,7 @@ export async function getDatabase(): Promise<{
     const database: any = databases.results[0];
     const databaseId = database.id;
     const databaseUrl = database.url;
-    const availableStatus: any[] =
-      database?.properties[preferences.property_status]?.select?.options ?? [];
+    const availableStatus: any[] = database?.properties[preferences.property_status]?.select?.options ?? [];
 
     const status = availableStatus.map(mapPageStatus);
     await storeDatabase({ databaseId, databaseUrl });

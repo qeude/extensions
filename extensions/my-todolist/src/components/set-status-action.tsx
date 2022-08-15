@@ -8,11 +8,7 @@ type SetStatusAction = {
   onSetStatus: (todo: Todo, status: Status | null) => void;
 };
 
-export function SetStatusAction({
-  todo,
-  status,
-  onSetStatus,
-}: SetStatusAction) {
+export function SetStatusAction({ todo, status, onSetStatus }: SetStatusAction) {
   return (
     <ActionPanel.Submenu
       title="Set Status"

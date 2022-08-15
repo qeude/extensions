@@ -42,7 +42,6 @@ export async function getTodos(
 
     return sortedTodos;
   } catch (err) {
-    console.log(err);
     if (isNotionClientError(err)) {
       showToast(Toast.Style.Failure, err.message);
     } else {

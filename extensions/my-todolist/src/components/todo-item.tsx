@@ -11,10 +11,7 @@ export function TodoItem({
 }: {
   todo: Todo;
   status: Status[];
-  handleSetStatus: (
-    todo: Todo,
-    status: Status | null
-  ) => Promise<null | undefined>;
+  handleSetStatus: (todo: Todo, status: Status | null) => Promise<null | undefined>;
 }) {
   return (
     <List.Item
@@ -26,11 +23,7 @@ export function TodoItem({
       title={todo.title}
       actions={
         <ActionPanel>
-          <SetStatusAction
-            todo={todo}
-            status={status}
-            onSetStatus={handleSetStatus}
-          />
+          <SetStatusAction todo={todo} status={status} onSetStatus={handleSetStatus} />
           <Action.OpenInBrowser
             title="Open in Notion"
             icon={Icon.Window}

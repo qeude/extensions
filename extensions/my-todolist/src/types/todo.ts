@@ -6,5 +6,5 @@ export interface Todo {
   status: Status;
   url: string;
   contentUrl: string | null;
-  lastEditedDateString: string;
+  lastEditedDateString: string | null;
 }

@@ -7,7 +7,7 @@ import { createTodo } from "../services/notion/operations/create-todo";
 import { updateTodoStatus } from "../services/notion/operations/update-todo-status";
 
 import { Todo } from "@/types/todo";
-import { Status } from "@/types/status";
+import { Status, StatusValue } from "@/types/status";
 import { getDatabase } from "../services/notion/operations/get-database";
 import { formatNotionUrl } from "../services/notion/utils/format-notion-url";
 import { getTitleUrl } from "../services/notion/utils/get-title-url";
@@ -58,13 +58,14 @@ export function useTodos() {
     try {
       if (!data) return null;
       setLoading(true);
-      const item = status.find((t) => t.id === filter)!;
+      const item = status.find((t) => t.id === filter) ?? status.find((t) => t.name === StatusValue.NotStarted)!;
       const optimisticTodo: Todo = {
         id: `fake-id-${Math.random() * 100}`,
         title: searchText,
         status: item,
         url: "",
         contentUrl: getTitleUrl(searchText),
+        lastEditedDateString: null,
       };
 
       setData([...data, optimisticTodo]);
@@ -72,10 +73,11 @@ export function useTodos() {
 
       const validatedTodo = await createTodo({
         title: searchText,
-        statusId: item?.id || null,
+        statusId: item?.id,
       });
 
       const validatedData = [...data, validatedTodo];
+
       setData(validatedData);
       await storeTodos(validatedData);
     } catch (e) {
@@ -90,15 +92,11 @@ export function useTodos() {
       try {
         if (!data) return null;
         setLoading(true);
-        const optimisticData = data.map((t) =>
-          t.id === todo.id ? { ...todo, status } : t
-        );
+        const optimisticData = data.map((t) => (t.id === todo.id ? { ...todo, status } : t));
         setData(optimisticData);
         const statusId = status?.id ? status.id : null;
         const validatedTodo = await updateTodoStatus(todo.id, statusId);
-        const validatedData = data.map((t) =>
-          t.id === validatedTodo.id ? validatedTodo : t
-        );
+        const validatedData = data.map((t) => (t.id === validatedTodo.id ? validatedTodo : t));
         setData(validatedData);
         await storeTodos(validatedData);
       } catch (e) {
@@ -119,13 +117,9 @@ export function useTodos() {
       if (searchText || filter !== "all") {
         setTodos(
           data.filter((item) => {
-            const isTagAllowed =
-              filter === "all" ? true : item.status?.id === filter;
+            const isTagAllowed = filter === "all" ? true : item.status?.id === filter;
 
-            return (
-              item.title.toUpperCase().includes(searchText.toUpperCase()) &&
-              isTagAllowed
-            );
+            return item.title.toUpperCase().includes(searchText.toUpperCase()) && isTagAllowed;
           })
         );
       } else {
