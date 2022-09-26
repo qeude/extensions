@@ -5,10 +5,7 @@ import { notion } from "../client";
 import { storeTodos } from "@/services/storage";
 import { mapPageToTodo } from "../utils/map-page-to-todo";
 
-export async function getTodos(
-  databaseId: string,
-  localTodos: Todo[]
-): Promise<Todo[]> {
+export async function getTodos(databaseId: string, localTodos: Todo[]): Promise<Todo[]> {
   try {
     const notionClient = await notion();
 

@@ -9,7 +9,6 @@ import { updateTodoStatus } from "../services/notion/operations/update-todo-stat
 import { Todo } from "@/types/todo";
 import { Status, StatusValue } from "@/types/status";
 import { getDatabase } from "../services/notion/operations/get-database";
-import { formatNotionUrl } from "../services/notion/utils/format-notion-url";
 import { getTitleUrl } from "../services/notion/utils/get-title-url";
 
 export function useTodos() {
@@ -32,7 +31,7 @@ export function useTodos() {
       const fetchedTodos = await getTodos(databaseId, localTodos);
 
       setStatus(status);
-      setNotionDbUrl(formatNotionUrl(databaseUrl));
+      setNotionDbUrl(databaseUrl);
       setData(fetchedTodos);
     } catch (e) {
       showToast(Toast.Style.Failure, "Error occurred");
