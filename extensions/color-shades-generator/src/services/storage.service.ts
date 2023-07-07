@@ -13,9 +13,7 @@ export class StorageService {
   }
   static async allPalettes(): Promise<Palette[]> {
     const items = await LocalStorage.allItems();
-    return Object.values(items).map(
-      (item) => JSON.parse(item, StorageService.jsonDateReviver) as Palette
-    );
+    return Object.values(items).map((item) => JSON.parse(item, StorageService.jsonDateReviver) as Palette);
   }
 
   static async savePalette(palette: Palette): Promise<void> {

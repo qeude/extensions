@@ -4,9 +4,7 @@ import { StorageService } from "../../services/storage.service";
 import { GenerateColorShadesGrid } from "../generate-color-shades/generate-color-shades-grid.component";
 
 export function ViewColorShadesList(): JSX.Element {
-  const { data: palettes, isLoading, revalidate } = useCachedPromise(
-    StorageService.allPalettes
-  );
+  const { data: palettes, isLoading, revalidate } = useCachedPromise(StorageService.allPalettes);
 
   return (
     <List isLoading={isLoading}>
@@ -14,9 +12,7 @@ export function ViewColorShadesList(): JSX.Element {
         ?.sort((a, b) => (a.creationDate < b.creationDate == true ? 1 : -1))
         .map((palette) => (
           <List.Item
-            accessories={[
-              { date: palette.creationDate, tooltip: "Created at" },
-            ]}
+            accessories={[{ date: palette.creationDate, tooltip: "Created at" }]}
             key={palette.name}
             title={palette.name}
             icon={{
@@ -29,9 +25,7 @@ export function ViewColorShadesList(): JSX.Element {
                 <Action.Push
                   title="View Palette"
                   icon={Icon.Eye}
-                  target={
-                    <GenerateColorShadesGrid color={palette.colors[500]} />
-                  }
+                  target={<GenerateColorShadesGrid color={palette.colors[500]} />}
                 />
                 <Action
                   title="Delete Entry"

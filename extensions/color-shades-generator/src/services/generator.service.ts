@@ -35,17 +35,11 @@ export class GeneratorService {
     };
 
     [50, 100, 200, 300, 400].forEach((level) => {
-      response.colors[level] = GeneratorService.lighten(
-        fullColorCode,
-        intensityMap[level]
-      );
+      response.colors[level] = GeneratorService.lighten(fullColorCode, intensityMap[level]);
     });
 
     [600, 700, 800, 900, 950].forEach((level) => {
-      response.colors[level] = GeneratorService.darken(
-        fullColorCode,
-        intensityMap[level]
-      );
+      response.colors[level] = GeneratorService.darken(fullColorCode, intensityMap[level]);
     });
 
     const palette = response as Palette;
@@ -55,11 +49,7 @@ export class GeneratorService {
 
   private static getFullColorCode(hexColor: string) {
     const hexValue = hexColor.replace("#", "");
-    return `#${
-      hexValue.length === 3
-        ? hexValue.replace(/(.)/g, "$1$1")
-        : hexValue.padEnd(6, "0")
-    }`;
+    return `#${hexValue.length === 3 ? hexValue.replace(/(.)/g, "$1$1") : hexValue.padEnd(6, "0")}`;
   }
 
   private static getColorName(color: string): string {
@@ -67,14 +57,8 @@ export class GeneratorService {
     return name;
   }
 
-  private static hueShift(
-    hues: Array<number>,
-    hue: number,
-    intensity: number
-  ): number {
-    const closestHue = hues.sort(
-        (a, b) => Math.abs(a - hue) - Math.abs(b - hue)
-      )[0],
+  private static hueShift(hues: Array<number>, hue: number, intensity: number): number {
+    const closestHue = hues.sort((a, b) => Math.abs(a - hue) - Math.abs(b - hue))[0],
       hueShift = closestHue - hue;
     return Math.round(intensity * hueShift * 0.5);
   }
@@ -85,8 +69,7 @@ export class GeneratorService {
     }
 
     const [h, s, v] = convert.hex.hsv(hex);
-    const hue =
-      h + GeneratorService.hueShift(GeneratorService.CMY_HUES, h, intensity);
+    const hue = h + GeneratorService.hueShift(GeneratorService.CMY_HUES, h, intensity);
     const saturation = s - Math.round(s * intensity);
     const value = v + Math.round((100 - v) * intensity);
 
@@ -100,9 +83,7 @@ export class GeneratorService {
 
     const inverseIntensity = 1 - intensity;
     const [h, s, v] = convert.hex.hsv(hex);
-    const hue =
-      h +
-      GeneratorService.hueShift(GeneratorService.RGB_HUES, h, inverseIntensity);
+    const hue = h + GeneratorService.hueShift(GeneratorService.RGB_HUES, h, inverseIntensity);
     const saturation = s + Math.round((100 - s) * inverseIntensity);
     const value = v - Math.round(v * inverseIntensity);
 

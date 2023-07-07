@@ -1,8 +1,8 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "color-shades",
-  "title": "Color shades",
-  "description": "Generate and manage you color shades palette.",
+  "title": "Color Shades",
+  "description": "Generate color shades from a base color and manage your generated color shades palettes.",
   "icon": "command-icon.png",
   "author": "qeude",
   "categories": [
@@ -13,8 +13,8 @@
   "commands": [
     {
       "name": "generate-color-shades",
-      "title": "Generate color shades",
-      "description": "Generate color shades palette for the given color.",
+      "title": "Generate Color Shades",
+      "description": "Generate color shades palette for the given base color.",
       "mode": "view",
       "arguments": [
         {
@@ -27,8 +27,8 @@
     },
     {
       "name": "view-color-shades",
-      "title": "View color shades",
-      "description": "View color shades palette for the given color.",
+      "title": "View Color Shades",
+      "description": "View your generated color shades palettes.",
       "mode": "view"
     }
   ],

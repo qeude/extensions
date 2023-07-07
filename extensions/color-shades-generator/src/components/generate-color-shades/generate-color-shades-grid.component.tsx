@@ -7,11 +7,7 @@ import { Palette } from "../../models/palette.model";
 
 export function GenerateColorShadesGrid(props: { color: string }): JSX.Element {
   const [baseColor, setBaseColor] = useState<string>(props.color);
-  const {
-    data: palette,
-    isLoading,
-    revalidate,
-  } = usePromise(GeneratorService.generatePalette, [baseColor]);
+  const { data: palette, isLoading, revalidate } = usePromise(GeneratorService.generatePalette, [baseColor]);
   return (
     <Grid isLoading={isLoading} columns={11} navigationTitle={palette?.name}>
       {Object.entries(palette?.colors ?? []).map(([name, color]) => (
@@ -39,9 +35,7 @@ export function GenerateColorShadesGrid(props: { color: string }): JSX.Element {
               />
               <Action.CopyToClipboard
                 title="Copy All Colors as Variable Declaration Ready"
-                content={PaletteService.variableDeclarationReadyPalette(
-                  palette as Palette
-                )}
+                content={PaletteService.variableDeclarationReadyPalette(palette as Palette)}
                 shortcut={{ modifiers: ["ctrl"], key: "c" }}
               />
               <Action.CopyToClipboard
