@@ -9,6 +9,17 @@ export function XcodeRuntimeListItem(props: { runtime: XcodeRuntime; revalidate:
       title={props.runtime.name}
       subtitle={{ tooltip: "Build version", value: props.runtime.buildVersion }}
       keywords={[props.runtime.platform, props.runtime.name, props.runtime.version]}
+      accessories={[
+        ...(props.runtime.lastUsageDate
+          ? [
+              {
+                icon: Icon.Clock,
+                text: props.runtime.lastUsageDate.toLocaleDateString(),
+                tooltip: "Last used",
+              },
+            ]
+          : []),
+      ]}
       actions={
         <ActionPanel>
           <Action

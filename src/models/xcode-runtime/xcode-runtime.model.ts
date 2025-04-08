@@ -21,4 +21,9 @@ export interface XcodeRuntime {
    * The build version
    */
   buildVersion: string;
+
+  /**
+   * The last time this runtime was used
+   */
+  lastUsageDate?: Date;
 }

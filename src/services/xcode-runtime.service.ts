@@ -38,12 +38,27 @@ export class XcodeRuntimeService {
     }
 
     const result: XcodeRuntime[] = runtimesResponseJSON.runtimes.map(
-      (runtime: { name: string; platform: string; version: string; buildversion: string }): XcodeRuntime => {
+      (runtime: {
+        name: string;
+        platform: string;
+        version: string;
+        buildversion: string;
+        lastUsage: Record<string, string>;
+      }): XcodeRuntime => {
+        const lastUsageValues = Object.values(runtime.lastUsage || {});
+        const lastUsageDate =
+          lastUsageValues.length > 0
+            ? new Date(Math.max(...lastUsageValues.map((timestamp) => new Date(timestamp).getTime())))
+            : undefined;
+
+        const isDefaultDate = lastUsageDate && lastUsageDate.getFullYear() === 1;
+        const lastUsage = isDefaultDate ? undefined : lastUsageDate;
         return {
           name: runtime.name,
           platform: runtime.platform as unknown as XcodeRuntimePlatform,
           version: runtime.version,
           buildVersion: runtime.buildversion,
+          lastUsageDate: lastUsage,
         };
       }
     );
