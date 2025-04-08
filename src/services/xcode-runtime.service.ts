@@ -70,4 +70,12 @@ export class XcodeRuntimeService {
   static async deleteXcodeRuntime(runtime: XcodeRuntime): Promise<void> {
     await execAsync(`xcrun simctl runtime delete ${runtime.buildVersion}`);
   }
+
+  static async deleteUnsupportedXcodeRuntimes(): Promise<void> {
+    const runtimes = await XcodeRuntimeService.xcodeRuntimes();
+    const unsupportedRuntimes = runtimes.filter((runtime) => runtime.isSupported === false);
+    for (const runtime of unsupportedRuntimes) {
+      await XcodeRuntimeService.deleteXcodeRuntime(runtime);
+    }
+  }
 }
