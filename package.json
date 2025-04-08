@@ -162,6 +162,13 @@
       "mode": "view"
     },
     {
+      "name": "manage-runtimes.command",
+      "title": "Manage Runtimes",
+      "subtitle": "Xcode",
+      "description": "Manage your Xcode Runtimes.",
+      "mode": "view"
+    },
+    {
       "name": "manage-simulators.command",
       "title": "Manage Simulators",
       "subtitle": "Xcode",
