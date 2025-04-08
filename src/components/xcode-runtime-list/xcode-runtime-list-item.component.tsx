@@ -16,14 +16,14 @@ export function XcodeRuntimeListItem(props: { runtime: XcodeRuntime; revalidate:
       subtitle={{ tooltip: "Build version", value: props.runtime.buildVersion }}
       keywords={[props.runtime.platform, props.runtime.name, props.runtime.version]}
       accessories={[
-        ...(props.runtime.isAvailable == false
+        ...(props.runtime.isSupported == false
           ? [
               {
                 icon: {
                   source: Icon.Warning,
                   tintColor: Color.Red,
                 },
-                tooltip: "Not available (may be deleted)",
+                tooltip: "Not supported (may be deleted)",
               },
             ]
           : []),

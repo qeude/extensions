@@ -56,7 +56,7 @@ export class XcodeRuntimeService {
         const lastUsage = isDefaultDate ? undefined : lastUsageDate;
         return {
           name: runtime.name,
-          isAvailable: runtime.isAvailable,
+          isSupported: runtime.isAvailable,
           platform: runtime.platform as unknown as XcodeRuntimePlatform,
           version: runtime.version,
           buildVersion: runtime.buildversion,
