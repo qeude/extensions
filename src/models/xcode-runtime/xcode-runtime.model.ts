@@ -26,4 +26,9 @@ export interface XcodeRuntime {
    * The last time this runtime was used
    */
   lastUsageDate?: Date;
+
+  /**
+   * The avaibility status of this runtime
+   */
+  isAvailable: boolean;
 }

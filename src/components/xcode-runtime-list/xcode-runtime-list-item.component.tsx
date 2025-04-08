@@ -1,4 +1,4 @@
-import { Action, ActionPanel, Alert, confirmAlert, Icon, List } from "@raycast/api";
+import { Action, ActionPanel, Alert, Color, confirmAlert, Icon, List } from "@raycast/api";
 import { XcodeRuntime } from "../../models/xcode-runtime/xcode-runtime.model";
 import { XcodeRuntimeService } from "../../services/xcode-runtime.service";
 import { operationWithUserFeedback } from "../../shared/operation-with-user-feedback";
@@ -6,16 +6,24 @@ import { operationWithUserFeedback } from "../../shared/operation-with-user-feed
 export function XcodeRuntimeListItem(props: { runtime: XcodeRuntime; revalidate: () => void }) {
   return (
     <List.Item
-      title={props.runtime.name}
+      title={{
+        tooltip:
+          props.runtime.lastUsageDate !== undefined
+            ? "Last used on " + props.runtime.lastUsageDate.toLocaleDateString()
+            : null,
+        value: props.runtime.name,
+      }}
       subtitle={{ tooltip: "Build version", value: props.runtime.buildVersion }}
       keywords={[props.runtime.platform, props.runtime.name, props.runtime.version]}
       accessories={[
-        ...(props.runtime.lastUsageDate
+        ...(props.runtime.isAvailable == false
           ? [
               {
-                icon: Icon.Clock,
-                text: props.runtime.lastUsageDate.toLocaleDateString(),
-                tooltip: "Last used",
+                icon: {
+                  source: Icon.Warning,
+                  tintColor: Color.Red,
+                },
+                tooltip: "Not available (may be deleted)",
               },
             ]
           : []),

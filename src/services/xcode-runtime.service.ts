@@ -40,6 +40,7 @@ export class XcodeRuntimeService {
     const result: XcodeRuntime[] = runtimesResponseJSON.runtimes.map(
       (runtime: {
         name: string;
+        isAvailable: boolean;
         platform: string;
         version: string;
         buildversion: string;
@@ -55,6 +56,7 @@ export class XcodeRuntimeService {
         const lastUsage = isDefaultDate ? undefined : lastUsageDate;
         return {
           name: runtime.name,
+          isAvailable: runtime.isAvailable,
           platform: runtime.platform as unknown as XcodeRuntimePlatform,
           version: runtime.version,
           buildVersion: runtime.buildversion,
